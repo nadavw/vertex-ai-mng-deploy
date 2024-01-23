@@ -39,15 +39,15 @@ ACCELERATOR_TYPE="nvidia-tesla-p100"
 MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
 
 # Check if the model ID is empty
-if [ -z "$MODEL_ID" ]; then
+if [ -n "$MODEL_ID" ]; then
   echo "Error: Model ID not found. Exiting script."
   exit 1
 fi
 
-ENDPOINT_ID=$()gcloud ai endpoints list --format='value(ENDPOINT_ID)')
+ENDPOINT_ID=$(gcloud ai endpoints list --format="value(ENDPOINT_ID)")
 
 # Check if the model ID is empty
-if [ -z "ENDPOINT_ID" ]; then
+if [ -n "ENDPOINT_ID" ]; then
   echo "Error: ENDPOINT ID not found. Exiting script."
   exit 1
 fi
