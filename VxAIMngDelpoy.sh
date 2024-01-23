@@ -47,7 +47,7 @@ fi
 ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
 
 # Check if the model ID is empty
-if [ -z "ENDPOINT_ID" ]; then
+if [ -z "$ENDPOINT_ID" ]; then
   echo "Error: ENDPOINT ID not found. Exiting script."
   exit 1
 fi
