@@ -44,7 +44,7 @@ if [ -z "$MODEL_ID" ]; then
   exit 1
 fi
 
-ENDPOINT_ID=$(gcloud ai endpoints list --format="value(ENDPOINT_ID)")
+ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
 
 # Check if the model ID is empty
 if [ -z "ENDPOINT_ID" ]; then
