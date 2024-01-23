@@ -73,5 +73,7 @@ if [ "$ACTION" == "UNDEPLOY" ]; then
   fi
 fi
 
+gcloud ai endpoints describe $ENDPOINT_ID --region=$REGION
+
 echo "Script completed successfully."
 exit 0
