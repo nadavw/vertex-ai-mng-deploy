@@ -28,12 +28,16 @@ fi
 
 # Define variables
 PROJECT=$(gcloud config get-value project)
-REGION=$(gcloud  config get-value compute/region)
-#REGION=us-central1
-DEPLOY_MODEL_ID=1234
+#REGION=$(gcloud  config get-value ai/region)
+echo ai-region: $(gcloud  config get-value ai/region)
+echo run-region: $(gcloud  config get-value run/region)
+REGION=us-central1
+#Model related parameters as configured in the model container build process
 MODEL_NAME="stable_diffusion_1_5-unique"
 MACHINE_TYPE="n1-standard-8"
 ACCELERATOR_TYPE="nvidia-tesla-p100"
+
+DEPLOY_MODEL_ID=1234
 
 # Get the model ID
 MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
