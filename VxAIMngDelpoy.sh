@@ -28,8 +28,8 @@ fi
 
 # Define variables
 PROJECT=$(gcloud config get-value project)
-#REGION=$(gcloregion hardcodedud config get-value compute/region)
-REGION=us-central1
+REGION=$(gcloud  config get-value compute/region)
+#REGION=us-central1
 DEPLOY_MODEL_ID=1234
 MODEL_NAME="stable_diffusion_1_5-unique"
 MACHINE_TYPE="n1-standard-8"
@@ -37,15 +37,14 @@ ACCELERATOR_TYPE="nvidia-tesla-p100"
 
 # Get the model ID
 MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
-
 # Check if the model ID is empty
 if [ -z "$MODEL_ID" ]; then
   echo "Error: Model ID not found. Exiting script."
   exit 1
 fi
 
+# Get the endpoint ID
 ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
-
 # Check if the model ID is empty
 if [ -z "$ENDPOINT_ID" ]; then
   echo "Error: ENDPOINT ID not found. Exiting script."
