@@ -1,11 +1,11 @@
 #!/bin/bash -xv
 
 #A number that will be used for the id of the model deployment
-DEPLOY_MODEL_ID=2000
-ENDPOINT_NAME="stable-diffusion-endpoint"
-MODEL_NAME="stable_diffusion_1_5-unique"
-MACHINE_TYPE="n1-standard-8"
-ACCELERATOR_TYPE="nvidia-tesla-p100"
+DEPLOY_MODEL_ID=1000
+ENDPOINT_NAME="stabilityai_stable-diffusion-endpoint"
+MODEL_NAME="stabilityai_stable-diffusion-2-1"
+MACHINE_TYPE="g2-standard-8"
+ACCELERATOR_TYPE="NVIDIA_L4"
 
 PROJECT=$(gcloud config get-value project)
 PROJECT_NUMBER=$(gcloud projects describe "$PROJECT" --format="value(projectNumber)")
