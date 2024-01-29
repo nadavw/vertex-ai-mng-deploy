@@ -19,8 +19,8 @@ echo "Number of parameters: $#"
 echo "Script name: $0"
 echo "$@"
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) DEPLOY_MODEL_ID(a number that will be used the the id of the model deployment)"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) ENDPOINT_NAME, DEPLOY_MODEL_ID(a number that will be used the the id of the model deployment)"
     exit 1
 fi
 
@@ -30,7 +30,17 @@ if [ "$ACTION" != "DEPLOY" ] && [ "$ACTION" != "UNDEPLOY" ] ; then
     exit 1
 fi
 
-DEPLOY_MODEL_ID=$2
+ENDPOINT_NAME=$2
+# Get the endpoint ID
+#ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
+ENDPOINT_ID=$(gcloud ai endpoints list --filter="DISPLAY_NAME:$ENDPOINT_NAME" --format="value(ENDPOINT_ID)")
+# Check if the $ENDPOINT_ID is empty
+if [ -z "$ENDPOINT_ID" ]; then
+  echo "Error: ENDPOINT ID not found for ENDPOINT_NAME $ENDPOINT_NAME . Exiting script."
+  exit 1
+fi
+
+DEPLOY_MODEL_ID=$3
 if [[ -n $DEPLOY_MODEL_ID ]] && [[ $DEPLOY_MODEL_ID =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
     echo "DEPLOY_MODEL_ID: $DEPLOY_MODEL_ID"
 else
@@ -39,7 +49,7 @@ else
 fi
 
 # Define variables
-PROJECT=$(gcloud config get-value project)
+#PROJECT=$(gcloud config get-value project)
 if [ -n "$REGION" ]; then
     echo "REGION is set to: $REGION"
 else
@@ -61,19 +71,12 @@ if [ -z "$MODEL_ID" ]; then
   exit 1
 fi
 
-# Get the endpoint ID
-ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
-# Check if the model ID is empty
-if [ -z "$ENDPOINT_ID" ]; then
-  echo "Error: ENDPOINT ID not found. Exiting script."
-  exit 1
-fi
-
-
 if [ "$ACTION" == "DEPLOY" ]; then
   # Model deploy (takes time)
   echo "Deploying model..."
-  gcloud ai endpoints deploy-model $ENDPOINT_ID --region=$REGION --model=$MODEL_ID --display-name=$MODEL_NAME --machine-type=$MACHINE_TYPE --accelerator=count=1,type=$ACCELERATOR_TYPE --deployed-model-id=$DEPLOY_MODEL_ID
+  gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name=$MODEL_NAME\
+   --machine-type=$MACHINE_TYPE --accelerator=count=1,type=$ACCELERATOR_TYPE --deployed-model-id="$DEPLOY_MODEL_ID"
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Error: Model deployment failed. Exiting script."
     exit 1
@@ -83,14 +86,15 @@ fi
 if [ "$ACTION" == "UNDEPLOY" ]; then
   # Model undeploy
   echo "Undeploying model..."
-  gcloud ai endpoints undeploy-model $ENDPOINT_ID --region=$REGION --deployed-model-id=$DEPLOY_MODEL_ID
+  gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Error: Model undeployment failed. Exiting script."
     exit 1
   fi
 fi
 
-gcloud ai endpoints describe $ENDPOINT_ID --region=$REGION
+gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION
 
 echo "Script completed successfully."
 exit 0
