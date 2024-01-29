@@ -18,7 +18,7 @@ UN_DEPLOY_SCHEDULE="0 19 * * *"
 
 #create a job for model deploy
 gcloud run jobs deploy $DEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mng-deploy \
-      --task-timeout=1800 --command "./VxAIMngDelpoy.sh" \
+      --tag="$ACTION" --task-timeout=1800 --command "./VxAIMngDelpoy.sh" \
       --args DEPLOY,$ENDPOINT_NAME,$DEPLOY_MODEL_ID,$MODEL_NAME,$MACHINE_TYPE,$ACCELERATOR_TYPE \
       --set-env-vars RUN_DEBUG=true,REGION=$REGION
 
@@ -27,7 +27,7 @@ gcloud run jobs --region=$REGION describe $DEPLOY_JOB_NAME
 
 #create a job for model undeploy
 gcloud run jobs deploy $UNDEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mng-deploy \
-      --task-timeout=180 --command "./VxAIMngDelpoy.sh" \
+      --tag="$ACTION" --task-timeout=180 --command "./VxAIMngDelpoy.sh" \
       --args UNDEPLOY,$ENDPOINT_NAME,$DEPLOY_MODEL_ID --set-env-vars RUN_DEBUG=true,REGION=$REGION
 
 #describe the job created
