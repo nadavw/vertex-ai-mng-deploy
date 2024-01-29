@@ -4,6 +4,10 @@
 FROM alpine:latest
 FROM google/cloud-sdk:latest
 
+# Install jq
+RUN apt-get update && \
+    apt-get install -y jq && \
+    rm -rf /var/lib/apt/lists/* \
 
 # Execute next commands in the directory /workspace
 WORKDIR /workspace
