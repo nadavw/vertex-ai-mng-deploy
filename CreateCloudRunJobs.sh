@@ -3,8 +3,8 @@
 #A number that will be used for the id of the model deployment
 DEPLOY_MODEL_ID=2000
 
-# Create the content for ./model_config_file.sh
-MODEL_CONFIG_FILE="./model_config_file_$DEPLOY_MODEL_ID.sh"
+# Create the content for ./model_config_file.sh in the cloned directory : vertex-ai-mng-deploy
+MODEL_CONFIG_FILE="./vertex-ai-mng-deploy/model_config_file_$DEPLOY_MODEL_ID.sh"
 echo 'MODEL_NAME="stable_diffusion_1_5-unique"' > $MODEL_CONFIG_FILE
 echo 'MACHINE_TYPE="n1-standard-8"' >> $MODEL_CONFIG_FILE
 echo 'ACCELERATOR_TYPE="nvidia-tesla-p100"' >> $MODEL_CONFIG_FILE
