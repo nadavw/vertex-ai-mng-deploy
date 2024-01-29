@@ -17,7 +17,7 @@ gcloud run jobs deploy $DEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mng-
 
 #create a schedule
 gcloud scheduler jobs create http scheduler-$DEPLOY_JOB_NAME \
-  --location SREGION \
+  --location $REGION \
   --schedule="$DEPLOY_SCHEDULE" --time-zone=$TIME_ZONE \
   --uri="https://$REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/$PROJECT/jobs/$DEPLOY_JOB_NAME:run" \
   --http-method POST \
@@ -33,7 +33,7 @@ gcloud run jobs deploy $UNDEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mn
 
 #create a schedule
 gcloud scheduler jobs create http scheduler-$DEPLOY_JOB_NAME \
-  --location SREGION \
+  --location $REGION \
   --schedule="$UN_DEPLOY_SCHEDULE" --time-zone=$TIME_ZONE \
   --uri="https://$REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/$PROJECT/jobs/$DEPLOY_JOB_NAME:run" \
   --http-method POST \
