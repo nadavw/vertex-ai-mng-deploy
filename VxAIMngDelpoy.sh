@@ -48,6 +48,27 @@ else
     exit 1
 fi
 
+$MODEL_NAME=$4
+if [ -z "$MODEL_NAME" ]; then
+  echo "Error: MODEL_NAME not found . Exiting script."
+  exit 1
+fi
+MACHINE_TYPE=$5
+if [ -z "$MACHINE_TYPE" ]; then
+  echo "Error: MACHINE_TYPE not found  Exiting script."
+  exit 1
+fi
+ACCELERATOR_TYPE=$6
+if [ -z "$ACCELERATOR_TYPE" ]; then
+  echo "Error: ACCELERATOR_TYPE not found  Exiting script."
+  exit 1
+fi
+# Now you can use the variables as needed
+echo "MODEL_NAME: $MODEL_NAME"
+echo "MACHINE_TYPE: $MACHINE_TYPE"
+echo "ACCELERATOR_TYPE: $ACCELERATOR_TYPE"
+
+
 # Define variables
 #PROJECT=$(gcloud config get-value project)
 if [ -n "$REGION" ]; then
@@ -59,13 +80,6 @@ fi
 
 #Model related parameters as configured in the model container build process
 MODEL_CONFIG_FILE="./model_config_file_$DEPLOY_MODEL_ID.sh"
-
-source $MODEL_CONFIG_FILE
-
-# Now you can use the variables as needed
-echo "MODEL_NAME: $MODEL_NAME"
-echo "MACHINE_TYPE: $MACHINE_TYPE"
-echo "ACCELERATOR_TYPE: $ACCELERATOR_TYPE"
 
 #MODEL_NAME="stable_diffusion_1_5-unique"
 #MACHINE_TYPE="n1-standard-8"
