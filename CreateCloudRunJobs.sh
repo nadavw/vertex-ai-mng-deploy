@@ -27,7 +27,7 @@ gcloud scheduler jobs create http scheduler-$DEPLOY_JOB_NAME \
 #describe the job created
 gcloud run jobs --region=us-central1 describe $DEPLOY_JOB_NAME
 
-#create a job for model deploy
+#create a job for model undeploy
 gcloud run jobs deploy $UNDEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mng-deploy \
       --task-timeout=180 --command "./VxAIMngDelpoy.sh" \
       --args UNDEPLOY,$ENDPOINT_NAME,$DEPLOY_MODEL_ID --set-env-vars RUN_DEBUG=true,REGION=$REGION
