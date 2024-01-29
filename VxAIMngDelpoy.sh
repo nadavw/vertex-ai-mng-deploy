@@ -19,6 +19,10 @@ echo "Number of parameters: $#"
 echo "Script name: $0"
 echo "$@"
 
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) DEPLOY_MODEL_ID(a number that will be used the the id of the model deployment)"
+    exit 1
+fi
 
 ACTION=$1
 if [ "$ACTION" != "DEPLOY" ] && [ "$ACTION" != "UNDEPLOY" ] ; then
@@ -26,18 +30,28 @@ if [ "$ACTION" != "DEPLOY" ] && [ "$ACTION" != "UNDEPLOY" ] ; then
     exit 1
 fi
 
+DEPLOY_MODEL_ID=$2
+if [[ -n $DEPLOY_MODEL_ID ]] && [[ $DEPLOY_MODEL_ID =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+    echo "DEPLOY_MODEL_ID: $DEPLOY_MODEL_ID"
+else
+    echo "The 2'nd ARG DEPLOY_MODEL_ID does not contain a number or is empty."
+    exit 1
+fi
+
 # Define variables
 PROJECT=$(gcloud config get-value project)
-#REGION=$(gcloud  config get-value ai/region)
-echo ai-region: $(gcloud  config get-value ai/region)
-echo run-region: $(gcloud  config get-value run/region)
-REGION=us-central1
+if [ -n "$REGION" ]; then
+    echo "REGION is set to: $REGION"
+else
+    REGION="us-central1"
+    echo "REGION was not set. Setting it to default: $REGION"
+fi
+
 #Model related parameters as configured in the model container build process
 MODEL_NAME="stable_diffusion_1_5-unique"
 MACHINE_TYPE="n1-standard-8"
 ACCELERATOR_TYPE="nvidia-tesla-p100"
 
-DEPLOY_MODEL_ID=1234
 
 # Get the model ID
 MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
