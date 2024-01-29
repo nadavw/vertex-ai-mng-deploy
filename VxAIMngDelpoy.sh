@@ -49,25 +49,22 @@ else
 fi
 
 MODEL_NAME=$4
-if [ -z "$MODEL_NAME" ]; then
-  echo "Error: MODEL_NAME not found . Exiting script."
-  exit 1
+if [ "$ACTION" = "DEPLOY" ] && [ -z "$MODEL_NAME" ]; then
+        echo "Error: MODEL_NAME not found. Exiting script."
+        exit 1
 fi
+
 MACHINE_TYPE=$5
-if [ -z "$MACHINE_TYPE" ]; then
+if [ "$ACTION" = "DEPLOY" ] && [ -z "$MACHINE_TYPE" ]; then
   echo "Error: MACHINE_TYPE not found  Exiting script."
   exit 1
 fi
+
 ACCELERATOR_TYPE=$6
-if [ -z "$ACCELERATOR_TYPE" ]; then
+if [ "$ACTION" = "DEPLOY" ] && [ -z "$ACCELERATOR_TYPE" ]; then
   echo "Error: ACCELERATOR_TYPE not found  Exiting script."
   exit 1
 fi
-# Now you can use the variables as needed
-echo "MODEL_NAME: $MODEL_NAME"
-echo "MACHINE_TYPE: $MACHINE_TYPE"
-echo "ACCELERATOR_TYPE: $ACCELERATOR_TYPE"
-
 
 # Define variables
 #PROJECT=$(gcloud config get-value project)
@@ -88,8 +85,8 @@ fi
 if [ "$ACTION" == "DEPLOY" ]; then
   # Model deploy (takes time)
   echo "Deploying model..."
-  gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name=$MODEL_NAME\
-   --machine-type=$MACHINE_TYPE --accelerator=count=1,type=$ACCELERATOR_TYPE --deployed-model-id="$DEPLOY_MODEL_ID"
+  gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name="$MODEL_NAME"\
+   --machine-type="$MACHINE_TYPE" --accelerator=count=1,type="$ACCELERATOR_TYPE" --deployed-model-id="$DEPLOY_MODEL_ID"
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Error: Model deployment failed. Exiting script."
