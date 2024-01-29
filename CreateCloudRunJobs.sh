@@ -25,7 +25,7 @@ gcloud scheduler jobs create http scheduler-$DEPLOY_JOB_NAME \
   --oauth-service-account-email "$PROJECT_NUMBER"-compute@developer.gserviceaccount.com
 
 #describe the job created
-gcloud run jobs --region=us-central1 describe $DEPLOY_JOB_NAME
+gcloud run jobs --region=$REGION describe $DEPLOY_JOB_NAME
 
 #create a job for model undeploy
 gcloud run jobs deploy $UNDEPLOY_JOB_NAME --region=$REGION --source vertex-ai-mng-deploy \
@@ -41,5 +41,5 @@ gcloud scheduler jobs create http scheduler-$DEPLOY_JOB_NAME \
   --oauth-service-account-email "$PROJECT_NUMBER"-compute@developer.gserviceaccount.com
 
 #describe the job created
-gcloud run jobs --region=us-central1 describe $UNDEPLOY_JOB_NAME
+gcloud run jobs --region=$REGION describe $UNDEPLOY_JOB_NAME
 
