@@ -19,7 +19,7 @@ echo "Number of parameters: $#"
 echo "Script name: $0"
 echo "$@"
 
-if [ "$#" -ge 3 ]; then
+if [ "$#" -lt 3 ]; then
     echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) ENDPOINT_NAME, DEPLOY_MODEL_ID(a number that will be used the the id of the model deployment)"
     exit 1
 fi
