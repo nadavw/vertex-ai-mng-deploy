@@ -33,7 +33,7 @@ fi
 ENDPOINT_NAME=$2
 # Get the endpoint ID
 #ENDPOINT_ID=$(gcloud ai endpoints list --region=$REGION --format="value(ENDPOINT_ID)")
-ENDPOINT_ID=$(gcloud ai endpoints list --filter="DISPLAY_NAME:$ENDPOINT_NAME" --format="value(ENDPOINT_ID)")
+ENDPOINT_ID=$(gcloud ai endpoints list --region="$REGION" --filter="DISPLAY_NAME:$ENDPOINT_NAME" --format="value(ENDPOINT_ID)")
 # Check if the $ENDPOINT_ID is empty
 if [ -z "$ENDPOINT_ID" ]; then
   echo "Error: ENDPOINT ID not found for ENDPOINT_NAME $ENDPOINT_NAME . Exiting script."
@@ -58,9 +58,18 @@ else
 fi
 
 #Model related parameters as configured in the model container build process
-MODEL_NAME="stable_diffusion_1_5-unique"
-MACHINE_TYPE="n1-standard-8"
-ACCELERATOR_TYPE="nvidia-tesla-p100"
+MODEL_CONFIG_FILE="./model_config_file_$DEPLOY_MODEL_ID.sh"
+
+source $MODEL_CONFIG_FILE
+
+# Now you can use the variables as needed
+echo "MODEL_NAME: $MODEL_NAME"
+echo "MACHINE_TYPE: $MACHINE_TYPE"
+echo "ACCELERATOR_TYPE: $ACCELERATOR_TYPE"
+
+#MODEL_NAME="stable_diffusion_1_5-unique"
+#MACHINE_TYPE="n1-standard-8"
+#ACCELERATOR_TYPE="nvidia-tesla-p100"
 
 
 # Get the model ID
@@ -89,7 +98,7 @@ if [ "$ACTION" == "UNDEPLOY" ]; then
   gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
-    echo "Error: Model undeployment failed. Exiting script."
+    echo "Error: Model un-deployment failed. Exiting script."
     exit 1
   fi
 fi
