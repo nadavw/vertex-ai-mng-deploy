@@ -10,7 +10,6 @@ WORKDIR /workspace
 
 # Copy over the script to the /workspace directory
 COPY VxAIMngDelpoy.sh .
-COPY model_config_file_*.sh .
 # Just in case the script doesn't have the executable bit set
 RUN chmod +x ./VxAIMngDelpoy.sh
 
