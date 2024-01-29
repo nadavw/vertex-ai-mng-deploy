@@ -48,7 +48,7 @@ else
     exit 1
 fi
 
-$MODEL_NAME=$4
+MODEL_NAME=$4
 if [ -z "$MODEL_NAME" ]; then
   echo "Error: MODEL_NAME not found . Exiting script."
   exit 1
@@ -77,15 +77,6 @@ else
     REGION="us-central1"
     echo "REGION was not set. Setting it to default: $REGION"
 fi
-
-#Model related parameters as configured in the model container build process
-MODEL_CONFIG_FILE="./model_config_file_$DEPLOY_MODEL_ID.sh"
-
-#MODEL_NAME="stable_diffusion_1_5-unique"
-#MACHINE_TYPE="n1-standard-8"
-#ACCELERATOR_TYPE="nvidia-tesla-p100"
-
-
 # Get the model ID
 MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
 # Check if the model ID is empty
