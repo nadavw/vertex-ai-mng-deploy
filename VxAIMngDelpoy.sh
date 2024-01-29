@@ -20,7 +20,7 @@ echo "Script name: $0"
 echo "$@"
 
 if [ "$#" -lt 3 ]; then
-    echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) ENDPOINT_NAME, DEPLOY_MODEL_ID(a number that will be used the the id of the model deployment)"
+    echo "Usage: $0 ACTION(DEPLOY/UNDEPLOY) ENDPOINT_NAME, MODEL_NAME"
     exit 1
 fi
 
@@ -40,11 +40,11 @@ if [ -z "$ENDPOINT_ID" ]; then
   exit 1
 fi
 
-DEPLOY_MODEL_ID=$3
-if [[ -n $DEPLOY_MODEL_ID ]] && [[ $DEPLOY_MODEL_ID =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-    echo "DEPLOY_MODEL_ID: $DEPLOY_MODEL_ID"
+MODEL_NAME=$3
+if [ -z "$MODEL_NAME" ]; then
+    echo "MODEL_NAME: $MODEL_NAME"
 else
-    echo "The 2'nd ARG DEPLOY_MODEL_ID does not contain a number or is empty."
+    echo "The ARG MODEL_NAME is empty."
     exit 1
 fi
 
@@ -59,9 +59,8 @@ fi
 
 if [ "$ACTION" == "DEPLOY" ]; then
   # Model deploy (takes time)
-  MODEL_NAME=$4
-  MACHINE_TYPE=$5
-  ACCELERATOR_TYPE=$6
+  MACHINE_TYPE=$4
+  ACCELERATOR_TYPE=$5
   # Get the model ID
   MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
   if [ -z "$MODEL_ID" ]; then
@@ -71,7 +70,7 @@ if [ "$ACTION" == "DEPLOY" ]; then
 
   echo "Deploying model..."
   gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name="$MODEL_NAME"\
-   --machine-type="$MACHINE_TYPE" --accelerator=count=1,type="$ACCELERATOR_TYPE" --deployed-model-id="$DEPLOY_MODEL_ID"
+   --machine-type="$MACHINE_TYPE" --accelerator=count=1,type="$ACCELERATOR_TYPE"
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Error: Model deployment failed. Exiting script."
@@ -81,7 +80,9 @@ fi
 
 if [ "$ACTION" == "UNDEPLOY" ]; then
   # Model undeploy
-  echo "Undeploying model..."
+  echo "Un-deploying model..."
+  DEPLOY_MODEL_ID=$(gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION \
+   --format=json | jq -r '.deployedModels[] | select(.displayName == "stabilityai_sd-2-1").id')
   gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
