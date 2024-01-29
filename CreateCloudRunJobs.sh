@@ -2,7 +2,7 @@
 
 #A number that will be used for the id of the model deployment
 ENDPOINT_NAME="stabilityai_stable-diffusion-endpoint"
-MODEL_NAME="stabilityai_stable-diffusion-2-1"
+MODEL_NAME="stable-diffusion-2-1"
 MACHINE_TYPE="g2-standard-8"
 ACCELERATOR_TYPE="nvidia-l4"
 
