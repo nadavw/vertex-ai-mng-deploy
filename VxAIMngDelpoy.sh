@@ -42,8 +42,6 @@ fi
 
 MODEL_NAME=$3
 if [ -z "$MODEL_NAME" ]; then
-    echo "MODEL_NAME: $MODEL_NAME"
-else
     echo "The ARG MODEL_NAME is empty."
     exit 1
 fi
