@@ -9,7 +9,7 @@ FROM google/cloud-sdk:latest
 WORKDIR /workspace
 
 # Copy over the script to the /workspace directory
-COPY VxAIMngDelpoy.sh .
+COPY *.sh .
 
 # Just in case the script doesn't have the executable bit set
 RUN chmod +x ./VxAIMngDelpoy.sh
