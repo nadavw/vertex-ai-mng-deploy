@@ -48,25 +48,6 @@ else
     exit 1
 fi
 
-MODEL_NAME=$4
-if [ "$ACTION" = "DEPLOY" ] && [ -z "$MODEL_NAME" ]; then
-        echo "Error: MODEL_NAME not found. Exiting script."
-        exit 1
-fi
-
-MACHINE_TYPE=$5
-if [ "$ACTION" = "DEPLOY" ] && [ -z "$MACHINE_TYPE" ]; then
-  echo "Error: MACHINE_TYPE not found  Exiting script."
-  exit 1
-fi
-
-ACCELERATOR_TYPE=$6
-if [ "$ACTION" = "DEPLOY" ] && [ -z "$ACCELERATOR_TYPE" ]; then
-  echo "Error: ACCELERATOR_TYPE not found  Exiting script."
-  exit 1
-fi
-
-# Define variables
 #PROJECT=$(gcloud config get-value project)
 if [ -n "$REGION" ]; then
     echo "REGION is set to: $REGION"
@@ -74,16 +55,20 @@ else
     REGION="us-central1"
     echo "REGION was not set. Setting it to default: $REGION"
 fi
-# Get the model ID
-MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
-# Check if the model ID is empty
-if [ -z "$MODEL_ID" ]; then
-  echo "Error: Model ID not found. Exiting script."
-  exit 1
-fi
+
 
 if [ "$ACTION" == "DEPLOY" ]; then
   # Model deploy (takes time)
+  MODEL_NAME=$4
+  MACHINE_TYPE=$5
+  ACCELERATOR_TYPE=$6
+  # Get the model ID
+  MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
+  if [ -z "$MODEL_ID" ]; then
+    echo "Error: Model ID not found. Exiting script."
+    exit 1
+  fi
+
   echo "Deploying model..."
   gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name="$MODEL_NAME"\
    --machine-type="$MACHINE_TYPE" --accelerator=count=1,type="$ACCELERATOR_TYPE" --deployed-model-id="$DEPLOY_MODEL_ID"
