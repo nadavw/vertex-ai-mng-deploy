@@ -54,7 +54,6 @@ else
     echo "REGION was not set. Setting it to default: $REGION"
 fi
 
-
 if [ "$ACTION" == "DEPLOY" ]; then
   # Model deploy (takes time)
   MACHINE_TYPE=$4
@@ -76,7 +75,7 @@ if [ "$ACTION" == "UNDEPLOY" ]; then
   # Model undeploy
   echo "Un-deploying model..."
   DEPLOY_MODEL_ID=$(gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION \
-   --format=json | jq -r '.deployedModels[] | select(.displayName = "$MODEL_NAME").id')
+   --format=json | jq --arg ml_name "$MODEL_NAME" -r '.deployedModels[] | select(.displayName == $ml_name).id')
 
     gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
 fi
