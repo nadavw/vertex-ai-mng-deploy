@@ -13,9 +13,9 @@ RUN apt-get update && \
 WORKDIR /workspace
 
 # Copy over the script to the /workspace directory
-COPY VxAIMngDelpoy.sh .
+COPY MngModelDeploy.sh .
 # Just in case the script doesn't have the executable bit set
-RUN chmod +x ./VxAIMngDelpoy.sh
+RUN chmod +x ./MngModelDeploy.sh
 
 # Run the script when starting the container
-CMD [ "./VxAIMngDelpoy.sh" ]
+CMD [ "./MngModelDeploy.sh" ]

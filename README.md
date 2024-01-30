@@ -21,7 +21,7 @@ Before running the script, ensure that you have the following prerequisites:
 Execute the script with the following command:
 
 ```bash
-./VxAIMngDelpoy.sh [ACTION]
+./MngModelDeploy.sh [ACTION]
 ```
 
 Replace `[ACTION]` with either `DEPLOY` or `UNDEPLOY` to perform the corresponding action.
@@ -65,5 +65,5 @@ ACCELERATOR_TYPE="nvidia-tesla-p100"
 ### Example
 
 ```bash
-./VxAIMngDelpoy.sh DEPLOY
+./MngModelDeploy.sh DEPLOY
 ```

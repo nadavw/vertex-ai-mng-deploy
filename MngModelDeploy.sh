@@ -61,10 +61,6 @@ if [ "$ACTION" == "DEPLOY" ]; then
   ACCELERATOR_TYPE=$5
   # Get the model ID
   MODEL_ID=$(gcloud ai models list --region=$REGION --filter="DISPLAY_NAME:$MODEL_NAME" --format="value(MODEL_ID)")
-  if [ -z "$MODEL_ID" ]; then
-    echo "Error: Model ID not found. Exiting script."
-    exit 1
-  fi
 
   echo "Deploying model..."
   gcloud ai endpoints deploy-model "$ENDPOINT_ID" --region=$REGION --model="$MODEL_ID" --display-name="$MODEL_NAME"\
@@ -81,12 +77,8 @@ if [ "$ACTION" == "UNDEPLOY" ]; then
   echo "Un-deploying model..."
   DEPLOY_MODEL_ID=$(gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION \
    --format=json | jq -r '.deployedModels[] | select(.displayName = "$MODEL_NAME").id')
-  gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
-  # shellcheck disable=SC2181
-  if [ $? -ne 0 ]; then
-    echo "Error: Model un-deployment failed. Exiting script."
-    exit 1
-  fi
+
+    gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
 fi
 
 gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION
