@@ -80,7 +80,7 @@ if [ "$ACTION" == "UNDEPLOY" ]; then
   # Model undeploy
   echo "Un-deploying model..."
   DEPLOY_MODEL_ID=$(gcloud ai endpoints describe "$ENDPOINT_ID" --region=$REGION \
-   --format=json | jq -r '.deployedModels[] | select(.displayName == "stabilityai_sd-2-1").id')
+   --format=json | jq -r '.deployedModels[] | select(.displayName = "$MODEL_NAME").id')
   gcloud ai endpoints undeploy-model "$ENDPOINT_ID" --region=$REGION --deployed-model-id="$DEPLOY_MODEL_ID"
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
